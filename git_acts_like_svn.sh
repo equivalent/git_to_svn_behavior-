@@ -27,10 +27,9 @@ if [ ! -f /usr/bin/gitAttributesKeepMine.sh ]; then
 # Nothing to do: %A (the second parameter) already contains my version
 # Just indicate the merge has been successfully "resolved" with the exit status
 #
-#uncoment next line if you wan't to keep their changes
-#cp -f $3 $2
-exit 0" >> /usr/bin/gitAttributesKeepMine.sh
-
+#uncoment next line if you wan't to keep their changes when git conflict
+#cp -f \$3 \$2
+exit 0" > /usr/bin/gitAttributesKeepMine.sh
 
 fi
 
@@ -51,11 +50,17 @@ fi
 
 echo '* merge=keepMine' > .gitattributes
 git config merge.keepMine.name "always keep mine during merge"
-git config merge.keepMine.driver "gitAttributesKeepMine %O %A %B"
+git config merge.keepMine.driver "gitAttributesKeepMine.sh %O %A %B"
 
 #if you want only merge functionality coment next  3 lines
 echo '* rebase=keepMine' >> .gitattributes
 git config rebase.keepMine.name "always keep mine during rebase"
-git config rebase.keepMine.driver "gitAttributesKeepMine %O %A %B"
+git config rebase.keepMine.driver "gitAttributesKeepMine.sh %O %A %B"
+
+#if you dont want to ignore pull conflicts coment next  3 lines
+echo '* pull=keepMine' >> .gitattributes
+git config pull.keepMine.name "always keep mine during pull"
+git config pull.keepMine.driver "gitAttributesKeepMine.sh %O %A %B"
+
 
 echo 'done'
